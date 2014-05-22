@@ -1,0 +1,43 @@
+<?php
+function db_procedures_menu() {
+
+
+	$items['admin/config/services/db_procedures_configuration'] = array(
+		'title' => 'DB procedures Settings',
+		'description' => 'Settings for theDB procedures module',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('db_procedures_global_settings'),
+		'access arguments' => array('administer db procedures'),
+		'file' => 'db_procedures.admin.inc',
+		);  
+
+	
+	return $items;
+
+
+}
+
+function db_procedures_init()
+{
+	# code...
+
+}
+
+function db_procedures_db_create_procedure()
+{
+	db_procedures_load_includes();
+	db_create_procedure(
+		'procedure_1',
+		array('param1' => array(
+			'type' => 'int',
+			'not_null' => true,
+			),
+		)	
+		);
+}
+
+function db_procedures_load_includes()
+{
+	module_load_include('inc','db_procedures','includes/db_mysql');
+	// module_load_include('inc','db_procedures','includes/db_sqlite');
+}

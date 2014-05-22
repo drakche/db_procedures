@@ -1,0 +1,7 @@
+name = Stored procedure extension
+description = Module that extends the DB apstraction layer with stored procedures support.
+package = "DB Extender"
+core = 7.x
+
+files[] = includes/db_mysql.inc
+configure = admin/config/services/db_procedures_configuration
