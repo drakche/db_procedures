@@ -2,76 +2,71 @@
 function db_procedures_menu() {
 
 
-	$items['admin/config/services/db_procedures_configuration'] = array(
-		'title' => 'DB procedures Settings',
-		'description' => 'Settings for theDB procedures module',
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('db_procedures_global_settings'),
-		'access arguments' => array('administer db procedures'),
-		'file' => 'db_procedures.admin.inc',
-		);  
+  $items['admin/config/services/db_procedures_configuration'] = array(
+    'title' => 'DB procedures Settings',
+    'description' => 'Settings for theDB procedures module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('db_procedures_global_settings'),
+    'access arguments' => array('administer db procedures'),
+    'file' => 'db_procedures.admin.inc',
+  );
 
-	
-	return $items;
+
+  return $items;
 
 
 }
 
-function db_procedures_init()
-{
-	# code...
+function db_procedures_init() {
+  # code...
 
 }
 
-function db_procedures_create($procedure_name, $input_parameters=false, $output_parameter=false,$procedure_parameters_input_output_array=false)
-{
-	
-	_db_procedures_load_includes();
-	_db_create_procedure($procedure_name,$input_parameters,$output_parameter);	
+function db_procedures_create($procedure_name, $input_parameters = FALSE, $output_parameter = FALSE, $procedure_parameters_input_output_array = FALSE) {
+
+  _db_procedures_load_includes();
+  _db_create_procedure($procedure_name, $input_parameters, $output_parameter);
 }
 
-function db_procedures_execute($procedure_name, $input_parameters=false, $output_parameter=false,$procedure_parameters_input_output_array=false)
-{
-	
-	_db_procedures_load_includes();
-	return _db_execute_procedure($procedure_name,$input_parameters,$output_parameter,$procedure_parameters_input_output_array);	
-}
+function db_procedures_execute($procedure_name, $input_parameters = FALSE, $output_parameter = FALSE, $procedure_parameters_input_output_array = FALSE) {
 
-
-function _db_procedures_load_includes()
-{	
-	//include the corresponding inc for drivers
-	switch (db_driver()) {
-		case 'mysql':
-		module_load_include('inc','db_procedures','includes/db_mysql');
-		break;				
-		default:
-		module_load_include('inc','db_procedures','includes/db_mysql');
-		break;
-	}	
+  _db_procedures_load_includes();
+  return _db_execute_procedure($procedure_name, $input_parameters, $output_parameter, $procedure_parameters_input_output_array);
 }
 
 
-function tester()
-{
-	$input_parameters_call = array(
-		33
-		);
+function _db_procedures_load_includes() {
+  //include the corresponding inc for drivers
+  switch (db_driver()) {
+    case 'mysql':
+      module_load_include('inc', 'db_procedures', 'includes/db_mysql');
+      break;
+    default:
+      module_load_include('inc', 'db_procedures', 'includes/db_mysql');
+      break;
+  }
+}
 
-	$output_parameters_call = array(
-		'@out1'
-		);
-	$inout_parameters_call = array(
-		'@inout' => 44
-		);
 
-	$result = db_procedures_execute('test_procedure', $input_parameters_call, $output_parameters_call)->fetchAll();
-	$result2 = db_procedures_execute('test_procedure_input_only', $input_parameters_call)->fetchAll();
-	$result3 = db_procedures_execute('test_procedure_inout', $input_parameters_call,$output_parameters_call,$inout_parameters_call)->fetchAll();
+function tester() {
+  $input_parameters_call = array(
+    33
+  );
 
-	dsm($result);
-	dsm($result2);
-	dsm($result3);
-	
+  $output_parameters_call = array(
+    '@out1'
+  );
+  $inout_parameters_call = array(
+    '@inout' => 44
+  );
+
+  $result = db_procedures_execute('test_procedure', $input_parameters_call, $output_parameters_call)->fetchAll();
+  $result2 = db_procedures_execute('test_procedure_input_only', $input_parameters_call)->fetchAll();
+  $result3 = db_procedures_execute('test_procedure_inout', $input_parameters_call, $output_parameters_call, $inout_parameters_call)->fetchAll();
+
+  dsm($result);
+  dsm($result2);
+  dsm($result3);
+
 
 }
