@@ -23,21 +23,55 @@ function db_procedures_init()
 
 }
 
-function db_procedures_db_create_procedure()
+function db_procedures_create($procedure_name, $input_parameters=false, $output_parameter=false,$procedure_parameters_input_output_array=false)
 {
-	db_procedures_load_includes();
-	db_create_procedure(
-		'procedure_1',
-		array('param1' => array(
-			'type' => 'int',
-			'not_null' => true,
-			),
-		)	
-		);
+	
+	_db_procedures_load_includes();
+	_db_create_procedure($procedure_name,$input_parameters,$output_parameter);	
 }
 
-function db_procedures_load_includes()
+function db_procedures_execute($procedure_name, $input_parameters=false, $output_parameter=false,$procedure_parameters_input_output_array=false)
 {
-	module_load_include('inc','db_procedures','includes/db_mysql');
-	// module_load_include('inc','db_procedures','includes/db_sqlite');
+	
+	_db_procedures_load_includes();
+	return _db_execute_procedure($procedure_name,$input_parameters,$output_parameter,$procedure_parameters_input_output_array);	
+}
+
+
+function _db_procedures_load_includes()
+{	
+	//include the corresponding inc for drivers
+	switch (db_driver()) {
+		case 'mysql':
+		module_load_include('inc','db_procedures','includes/db_mysql');
+		break;				
+		default:
+		module_load_include('inc','db_procedures','includes/db_mysql');
+		break;
+	}	
+}
+
+
+function tester()
+{
+	$input_parameters_call = array(
+		33
+		);
+
+	$output_parameters_call = array(
+		'@out1'
+		);
+	$inout_parameters_call = array(
+		'@inout' => 44
+		);
+
+	$result = db_procedures_execute('test_procedure', $input_parameters_call, $output_parameters_call)->fetchAll();
+	$result2 = db_procedures_execute('test_procedure_input_only', $input_parameters_call)->fetchAll();
+	$result3 = db_procedures_execute('test_procedure_inout', $input_parameters_call,$output_parameters_call,$inout_parameters_call)->fetchAll();
+
+	dsm($result);
+	dsm($result2);
+	dsm($result3);
+	
+
 }
