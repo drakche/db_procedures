@@ -22,10 +22,10 @@ function db_procedures_init() {
 
 }
 
-function db_procedures_create($procedure_name, $input_parameters = FALSE, $output_parameter = FALSE, $procedure_parameters_input_output_array = FALSE) {
+function db_procedures_create($procedure_name, $input_parameters = FALSE, $output_parameter = FALSE, $procedure_parameters_input_output_array = FALSE, $procedure_code = FALSE, $procedure_file = FALSE) {
 
   _db_procedures_load_includes();
-  _db_create_procedure($procedure_name, $input_parameters, $output_parameter);
+  _db_create_procedure($procedure_name, $input_parameters, $output_parameter, $procedure_parameters_input_output_array, $procedure_code, $procedure_file);
 }
 
 function db_procedures_execute($procedure_name, $input_parameters = FALSE, $output_parameter = FALSE, $procedure_parameters_input_output_array = FALSE) {
@@ -52,7 +52,24 @@ function tester() {
   $input_parameters_call = array(
     33
   );
+  $input_parameters_create = array(
+    'parameter1' => 'int',
+    'parameter2' => 'varchar(55)'
+  );
+  $output_parameters_create = array(
+    'parameter1out' => 'int',
+    'parameter2out' => 'varchar(55)'
+  );
+  $inout_create = array(
+    'tt' => 'int',
+    'rr' => 'varchar(55)'
+  );
+  $code_files = array(
+    'test_module' => 'test.sql',
+    'test_module2' => 'test.sql',
+  );
 
+  $code = 'SELECT parameter1*parameter2 as result;';
   $output_parameters_call = array(
     '@out1'
   );
@@ -60,13 +77,14 @@ function tester() {
     '@inout' => 44
   );
 
-  $result = db_procedures_execute('test_procedure', $input_parameters_call, $output_parameters_call)->fetchAll();
-  $result2 = db_procedures_execute('test_procedure_input_only', $input_parameters_call)->fetchAll();
-  $result3 = db_procedures_execute('test_procedure_inout', $input_parameters_call, $output_parameters_call, $inout_parameters_call)->fetchAll();
+//  $result = db_procedures_execute('test_procedure', $input_parameters_call, $output_parameters_call)->fetchAll();
+//  $result2 = db_procedures_execute('test_procedure_input_only', $input_parameters_call)->fetchAll();
+//  $result3 = db_procedures_execute('test_procedure_inout', $input_parameters_call, $output_parameters_call, $inout_parameters_call)->fetchAll();
 
-  dsm($result);
-  dsm($result2);
-  dsm($result3);
+//  dsm($result);
+//  dsm($result2);
+//  dsm($result3);
 
+  db_procedures_create('test_create', $input_parameters_create, NULL, NULL, $code);
 
 }
